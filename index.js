@@ -121,12 +121,11 @@ app.post('/sms', (req, res) => {
   }
 });
 
-// 提供前端获取最近 10 个位置信息的接口，包括预测位置
+// 提供前端获取所有位置信息的接口，包括预测位置
 app.get('/location', async (req, res) => {
   try {
-    // 查询最近的 10 个位置点，按时间降序排列，然后再反转为升序
-    let locations = await Location.find().sort({ timestamp: -1 }).limit(10);
-    locations = locations.reverse();
+    // 查询所有位置点，按时间升序排列
+    let locations = await Location.find().sort({ timestamp: 1 });
 
     let predictedLocation = null;
 
@@ -140,19 +139,36 @@ app.get('/location', async (req, res) => {
       const timeDiff = (loc2.timestamp - loc1.timestamp) / 1000;
 
       // 计算距离（米）
-      const distance = getDistanceFromLatLonInMeters(loc1.latitude, loc1.longitude, loc2.latitude, loc2.longitude);
+      const distance = getDistanceFromLatLonInMeters(
+        loc1.latitude,
+        loc1.longitude,
+        loc2.latitude,
+        loc2.longitude
+      );
 
       // 计算速度（米/秒）
       const speed = distance / timeDiff;
 
-      // 预测下一个位置（假设保持当前速度和方向，经过 timeDiff 时间）
-      const bearing = getBearing(loc1.latitude, loc1.longitude, loc2.latitude, loc2.longitude);
-      const predictedPoint = destinationPoint(loc2.latitude, loc2.longitude, speed * timeDiff, bearing);
+      // 计算方位角
+      const bearing = getBearing(
+        loc1.latitude,
+        loc1.longitude,
+        loc2.latitude,
+        loc2.longitude
+      );
+
+      // 预测下一个位置
+      const predictedPoint = destinationPoint(
+        loc2.latitude,
+        loc2.longitude,
+        speed * timeDiff,
+        bearing
+      );
 
       predictedLocation = {
         latitude: predictedPoint.latitude,
         longitude: predictedPoint.longitude,
-        timestamp: new Date(loc2.timestamp.getTime() + timeDiff * 1000)
+        timestamp: new Date(loc2.timestamp.getTime() + timeDiff * 1000),
       };
     }
 
