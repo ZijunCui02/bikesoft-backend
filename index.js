@@ -32,6 +32,23 @@ const locationSchema = new mongoose.Schema({
 
 const Location = mongoose.model('Location', locationSchema);
 
+const CLEAR_PASSWORD = '123456'; // 替换为实际的密码
+
+app.post('/clear-locations', async (req, res) => {
+  const { password } = req.body;
+  if (password !== CLEAR_PASSWORD) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  try {
+    await Location.deleteMany({});
+    res.json({ message: 'All locations have been cleared.' });
+    console.log('All location data has been cleared from the database.');
+  } catch (err) {
+    console.error('Error clearing locations:', err);
+    res.status(500).json({ error: 'Error clearing locations.' });
+  }
+});
+
 // 存储最新的位置信息
 let latestLocation = { latitude: null, longitude: null };
 
