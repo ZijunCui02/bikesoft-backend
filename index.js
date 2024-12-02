@@ -50,13 +50,12 @@ app.get('/', (req, res) => {
 
 // 配置邮件传输器
 const transporter = nodemailer.createTransport({
-  host: 'smtp.sendgrid.net',
-  port: 587, // 使用 TLS 连接
-  secure: false, // 对于端口 587，secure 应该为 false
-  requireTLS: true, // 强制使用 STARTTLS
+  host: 'smtp.163.com',
+  port: 465, // 使用 SSL 连接
+  secure: true, // 对于端口 465，secure 应该为 true
   auth: {
-    user: 'apikey', // SendGrid 要求用户名固定为 'apikey'
-    pass: 'process.env.SENDGRID_API_KEY', // 这里填写您的 SendGrid API Key
+    user: '2630441087@qq.com', // 您的 163 邮箱地址
+    pass: 'yplkyzwwvjxwebff'   // 您的 SMTP 专用密码
   }
 });
 console.log('SendGrid API Key 已加载：', process.env.SENDGRID_API_KEY ? '是' : '否');
@@ -64,13 +63,13 @@ console.log('SendGrid API Key 已加载：', process.env.SENDGRID_API_KEY ? '是
 // 发送邮件通知的函数
 function sendEmailNotification(latitude, longitude, timestamp) {
   const mailOptions = {
-    from: 'zijuncui02@gmail.com', // 请替换为您在 SendGrid 验证的发件人邮箱
-    to: ' HRosenbloom2@outlook.com', // 收件人地址，请替换为实际的收件人邮箱
+    from: '2630441087@qq.com', // 您的 163 邮箱地址
+    to: 'HRosenbloom2@outlook.com', // 收件人地址
     subject: 'New Location from EZ-Alarm',
     text: `New Location has been received：
-Latitude：${latitude}
-Longitude：${longitude}
-Timestamp：${timestamp}`
+  Latitude：${latitude}
+  Longitude：${longitude}
+  Timestamp：${timestamp}`
   };
 
   transporter.sendMail(mailOptions, function(error, info){
