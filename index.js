@@ -56,7 +56,7 @@ const transporter = nodemailer.createTransport({
   requireTLS: true, // 强制使用 STARTTLS
   auth: {
     user: 'apikey', // SendGrid 要求用户名固定为 'apikey'
-    pass: 'SENDGRID_API_KEY', // 这里填写您的 SendGrid API Key
+    pass: 'process.env.SENDGRID_API_KEY', // 这里填写您的 SendGrid API Key
   }
 });
 console.log('SendGrid API Key 已加载：', process.env.SENDGRID_API_KEY ? '是' : '否');
