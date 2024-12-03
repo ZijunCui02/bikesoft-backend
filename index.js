@@ -34,6 +34,19 @@ const Location = mongoose.model('Location', locationSchema);
 
 const CLEAR_PASSWORD = '123456'; // 替换为实际的密码
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// 启用 CORS，允许来自您的前端页面的请求
+app.use(cors({
+  origin: 'https://zijuncui02.github.io' // 请将此处替换为您的 GitHub Pages 网址
+}));
+
+// 根路径，显示欢迎信息
+app.get('/', (req, res) => {
+  res.send('Welcome to Bikesoft Backend API! Use /location to get the latest bike coordinates.');
+});
+
 app.post('/clear-locations', async (req, res) => {
   const { password } = req.body;
   if (password !== CLEAR_PASSWORD) {
@@ -51,19 +64,6 @@ app.post('/clear-locations', async (req, res) => {
 
 // 存储最新的位置信息
 let latestLocation = { latitude: null, longitude: null };
-
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
-// 启用 CORS，允许来自您的前端页面的请求
-app.use(cors({
-  origin: 'https://zijuncui02.github.io' // 请将此处替换为您的 GitHub Pages 网址
-}));
-
-// 根路径，显示欢迎信息
-app.get('/', (req, res) => {
-  res.send('Welcome to Bikesoft Backend API! Use /location to get the latest bike coordinates.');
-});
 
 // 配置邮件传输器
 const transporter = nodemailer.createTransport({
