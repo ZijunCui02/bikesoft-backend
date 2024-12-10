@@ -181,7 +181,7 @@ app.get('/location', async (req, res) => {
         speed * timeDiff,
         bearing
       );
-
+//虽然我是这么写的 但是 其实不用计算这些 直接用x_{n} - x_{n-1}来当作两者的差值就行 因为 时间等间隔
       predictedLocation = {
         latitude: predictedPoint.latitude,
         longitude: predictedPoint.longitude,
